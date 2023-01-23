@@ -1,6 +1,7 @@
 package ru.akimychev.convertjpgtopng
 
 import android.Manifest
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,12 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import ru.akimychev.convertjpgtopng.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val imagePicker = ImagePicker(activityResultRegistry) { imageUri ->
-        binding.img.load(imageUri)
-    }
+    private var uri: Uri? = null
+    private val imagePicker =
+        ImagePicker(ConverterJpgToPng(this), activityResultRegistry) { imageUri ->
+            binding.img.load(imageUri)
+            uri = imageUri
+        }
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -22,7 +27,7 @@ class MainActivity : AppCompatActivity() {
                 granted -> {
                     imagePicker.selectImage()
                 }
-                shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
                     showDialogForRequestPermission()
                 }
                 else -> {
@@ -41,10 +46,15 @@ class MainActivity : AppCompatActivity() {
         binding.btn.setOnClickListener {
             requestPermission()
         }
+
+        binding.btn2.setOnClickListener {
+
+            imagePicker.convert(uri)
+        }
     }
 
     private fun requestPermission() {
-        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
     private fun showDialogForRequestPermission() {
