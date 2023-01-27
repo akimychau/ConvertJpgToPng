@@ -6,17 +6,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import coil.load
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.akimychev.convertjpgtopng.ConvertingApp
-import ru.akimychev.convertjpgtopng.presenter.ConverterFragmentPresenter
 import ru.akimychev.convertjpgtopng.core.OnBackPressedListener
 import ru.akimychev.convertjpgtopng.databinding.FragmentMainBinding
 import ru.akimychev.convertjpgtopng.model.impl.ImageConverterRepositoryImpl
 import ru.akimychev.convertjpgtopng.model.impl.ImagePickerRepositoryImpl
 import ru.akimychev.convertjpgtopng.model.impl.StoragePermissionRepositoryImpl
+import ru.akimychev.convertjpgtopng.presenter.ConverterFragmentPresenter
 
 class ConverterFragment : MvpAppCompatFragment(), ConverterView, OnBackPressedListener {
 
@@ -111,5 +112,17 @@ class ConverterFragment : MvpAppCompatFragment(), ConverterView, OnBackPressedLi
 
     override fun hideLoading() {
         binding.progressBar.visibility = View.GONE
+    }
+
+    override fun makeToastGallery(pack: String) {
+        Toast.makeText(context, pack, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun makeToastSuccess(pack: String) {
+        Toast.makeText(context, "Картинка формата PNG сохранена в $pack", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun makeToastError() {
+        Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
     }
 }
