@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
+import io.reactivex.rxjava3.core.Single
 import ru.akimychev.convertjpgtopng.model.ImagePickerRepository
 
 class ImagePickerRepositoryImpl(
@@ -14,8 +15,9 @@ class ImagePickerRepositoryImpl(
     private var getContent: ActivityResultLauncher<String> =
         registry.register(RESULT_REGISTRY_KEY, ActivityResultContracts.GetContent(), callback)
 
-    override fun pickImage() {
+    override fun pickImage(): Single<String> {
         getContent.launch("image/*")
+        return Single.just("Выберите картинку из файловой системы")
     }
 
     private companion object {
