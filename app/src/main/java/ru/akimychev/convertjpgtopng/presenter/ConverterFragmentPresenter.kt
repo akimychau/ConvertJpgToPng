@@ -27,13 +27,13 @@ class ConverterFragmentPresenter(
 
     fun convertAndSave(uri: Uri?) {
         viewState.showLoading()
-        imageConverterRepository.convertToPng(uri)
+        imageConverterRepository.convertToPngRx(uri)
             .delay(3, TimeUnit.SECONDS)
             .subscribeByDefault()
             .subscribe(
                 {
                     viewState.hideLoading()
-                    viewState.makeToastSuccess(it.path)
+                    viewState.makeToastSuccess(it)
                 },
                 {
                     viewState.makeToastError()
@@ -43,7 +43,7 @@ class ConverterFragmentPresenter(
     }
 
     fun pickImage() {
-        imagePickerRepository.pickImage()
+        imagePickerRepository.pickImageRx()
             .subscribeByDefault()
             .subscribe(
                 {

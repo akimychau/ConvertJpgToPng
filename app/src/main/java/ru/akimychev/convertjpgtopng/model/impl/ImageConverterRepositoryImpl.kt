@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import io.reactivex.rxjava3.core.Single
 import ru.akimychev.convertjpgtopng.model.ImageConverterRepository
 import java.io.File
@@ -14,7 +15,15 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 
 class ImageConverterRepositoryImpl(private val currentContext: Context) : ImageConverterRepository {
-    override fun convertToPng(uri: Uri?): Single<File> {
+
+
+    override fun convertToPngRx(uri: Uri?): Single<String> {
+        return Single.create {
+            it.onSuccess(convert(uri))
+        }
+    }
+
+    override fun convert(uri: Uri?): String {
         uri?.let {
             val externalStorageState = Environment.getExternalStorageState()
             if (externalStorageState.equals(Environment.MEDIA_MOUNTED)) {
@@ -33,12 +42,13 @@ class ImageConverterRepositoryImpl(private val currentContext: Context) : ImageC
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     stream.flush()
                     stream.close()
-                    return Single.just(file)
+                    Log.d("@@@", Thread.currentThread().name)
+                    return file.path
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
-        return Single.error(Throwable())
+        return "Какая-то ошибка"
     }
 }

@@ -2,18 +2,20 @@ package ru.akimychev.convertjpgtopng.model
 
 import android.net.Uri
 import io.reactivex.rxjava3.core.Single
-import java.io.File
 
-fun interface ImageConverterRepository {
+interface ImageConverterRepository {
 
-    fun convertToPng(uri: Uri?): Single<File>
+    fun convertToPngRx(uri: Uri?): Single<String>
+    fun convert(uri: Uri?): String
 }
 
-fun interface ImagePickerRepository {
+interface ImagePickerRepository {
 
-    fun pickImage() : Single<String>
+    fun pickImageRx(): Single<String>
+    fun launch(): String
 }
 
 fun interface StoragePermissionRepository {
     fun requestPermission()
 }
+
